@@ -42,3 +42,29 @@ resource "aws_s3_bucket_notification" "lambda_trigger" {
 
   depends_on = [aws_lambda_permission.allow_s3]  # Ensure permission exists before notification is created
 }
+
+
+
+# 1️⃣ Create EventBridge rule
+resource "aws_cloudwatch_event_rule" "lambda_hourly_trigger" {
+  name                = "lambda-hourly-trigger"
+  description         = "Trigger Lambda every 1 hour"
+  schedule_expression = "rate(1 hour)"
+}
+
+# 2️⃣ Give Lambda permission to be invoked by EventBridge
+resource "aws_lambda_permission" "allow_eventbridge" {
+  statement_id  = "AllowExecutionFromEventBridge"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.aws_lambda_using_terraform.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.lambda_hourly_trigger.arn
+}
+
+# 3️⃣ Attach Lambda as target of EventBridge rule
+resource "aws_cloudwatch_event_target" "trigger_lambda" {
+  rule      = aws_cloudwatch_event_rule.lambda_hourly_trigger.name
+  target_id = "MyLambdaTarget"
+  arn       = aws_lambda_function.aws_lambda_using_terraform.arn
+}
+
