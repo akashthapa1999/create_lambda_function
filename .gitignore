@@ -1,0 +1,32 @@
+# Ignore Terraform working directory (providers, plugins, etc.)
+.terraform/
+
+# Ignore Terraform state files (contains sensitive data)
+*.tfstate
+*.tfstate.backup
+
+# Ignore variable definition files (often contain secrets like access keys)
+*.tfvars
+*.tfvars.json
+
+# Ignore crash logs
+crash.log
+
+# Ignore override files (local configuration overrides)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore dependency lock file (optional — include if you want reproducibility)
+# .terraform.lock.hcl
+
+# Ignore editor, OS, and Python files (optional, helpful for mixed projects)
+*.log
+__pycache__/
+*.py[cod]
+venv/
+.DS_Store
+.idea/
+.vscode/
+
